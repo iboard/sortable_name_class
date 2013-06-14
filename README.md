@@ -20,7 +20,7 @@ When I checked the discussion-group about this, in order to find out
 if I have a chance to get one of the green CleanCoder-bands, Uncle Bob 
 promised to give away for the first 20 people who will mention one of
 the mistakes...  Ok, it was obvious that I was late. But then I remembered 
-Sandi's gorges talk about testing and I tried if Sandi's point of view
+Sandi's gorgeous talk about testing and I tried if Sandi's point of view
 will collide with Uncle Bob's rules. If not (and I think it will not)
 then Sandi's suggestion of 'not test private methods' will be more
 efficient (at least for me) 
