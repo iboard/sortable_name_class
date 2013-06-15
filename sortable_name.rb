@@ -6,12 +6,11 @@ class SortableName
 
   def initialize name=nil
     raise 'Computer says, no.' if name.nil?
-    @unformatted = name.strip
-    parse name.strip
+    parse @unformatted = name.strip
   end
 
   def to_s sortable=true
-    sortable ? format_sortable : @unformatted
+    sortable ? format_sortable : format_original
   end
 
   private
@@ -45,6 +44,10 @@ class SortableName
 
   def last_part_first(_names)
     [ _names.last, _names[0..-2].join(' ') ]
+  end
+
+  def format_original
+    @unformatted.split(/\s+/).join(' ')
   end
 
 end

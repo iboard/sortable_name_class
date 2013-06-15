@@ -7,6 +7,11 @@ require_relative './sortable_name'
 
 describe SortableName do
 
+  def join(first,last)
+    [first,last].join(' ').strip
+  end
+
+
   context 'Without intput' do
 
     it 'Computer says, no.' do
@@ -30,42 +35,35 @@ describe SortableName do
   end
 
   context 'Pairs of possible input and expected outputs' do
-    #  input                     expected output
+
+    let(:postnominals)  { SortableName::POSTNOMINALS }
+
+    #  input               expected output       Scenario
     let(:pairs) {[
-     ['',                        ''           ],
-     ['Name',                    'Name'       ],
-     ['First Last',              'Last, First'],
-     ['Mr. Last',                'Last'       ],
-     ['Mr. First Last',          'Last, First'],
-     ['Mrs. First Last',         'Last, First'],
-     ['Ms. First Last',          'Last, First'],
-     ['Last PhD.',               'Last PhD.'       ],
-     ['First Last PhD.',         'Last, First PhD.'],
-     ['Mr. First van Last PhD.', 'Last, First van PhD.'],
-     ['  Name  ',                'Name'       ],
-     ['  First    Last  ',       'Last, First'],
-     ['  Mr.   First Last',      'Last, First'],
-     ['Mr. First Last jun.',     'Last, First jun.'],
-     ['Mr. Last sen.',           'Last sen.'],
-     ['Mr. Robert C. Martin Esq','Martin, Robert C. Esq'],
-     # If you miss a possible form:
-     #   # add the pair here and make the test pass.
-     #   # run `rspec --format d name_sorter_spec.rb`
-     #   # Clean up your mess and make sure you have 100% LOC 
-     #
-     # If all tests pass and you have uncovered LOC:
-     #   # open coverage/index.html, locate the uncovered LOC
-     #   # AND DELETE THEM
+     ['',                  ''           ],       # Empty is empty
+     ['Name',              'Name'       ],       # Simple name
+     ['First Last',        'Last, First'],       # Reverse First Last
+     ['First van Last',    'Last, First van'],   # Rearrange last part of name 
+     ['  Name  ',          'Name'       ],       # Single name with surrounding blanks
+     ['  First    Last  ', 'Last, First'],       # Decorating blanks everywhere
+     ['Robert C. Martin',  'Martin, Robert C.'], # With middle name
     ]}
 
-    # Let' test all pairs ...
-    # Ouput with puts is not necessary. It's here for demo only.
-    # If a pair fails rspec will tell you exactly what was expected 
-    # and what was returned.
-    it 'passes all examples' do
+    it 'passes all plain examples' do
       for pair in pairs do
-        puts "\t%30s => %-30s" % [pair.first.inspect, pair.last.inspect]
         expect( SortableName.new(pair.first).to_s ).to eq(pair.last)
+      end
+    end
+
+    it 'passes all examples with leading honorifics' do
+      for pair in pairs do
+        expect( SortableName.new( " Mr. Mrs. Ms. " + pair.first).to_s).to eq(pair.last)
+      end
+    end
+
+    it 'passes all examples with trailing post nominals' do
+      for pair in pairs do
+        expect( SortableName.new(join(pair.first,postnominals)).to_s).to eq(join(pair.last,postnominals))
       end
     end
 
@@ -73,7 +71,7 @@ describe SortableName do
   
   describe 'Integration' do
 
-    let(:sortable) { SortableName.new 'Mr. James Edward Gray II JEG2' }
+    let(:sortable) { SortableName.new '  Mr.  James  Edward Gray II JEG2  ' }
 
     it 'outputs formatted' do
       expect(sortable.to_s).to eq('Gray, James Edward II JEG2')
@@ -86,3 +84,6 @@ describe SortableName do
   end
 
 end
+
+
+
