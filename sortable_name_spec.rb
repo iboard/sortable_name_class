@@ -40,30 +40,36 @@ describe SortableName do
 
     #  input               expected output       Scenario
     let(:pairs) {[
-     ['',                  ''           ],       # Empty is empty
-     ['Name',              'Name'       ],       # Simple name
-     ['First Last',        'Last, First'],       # Reverse First Last
-     ['First van Last',    'Last, First van'],   # Rearrange last part of name 
-     ['  Name  ',          'Name'       ],       # Single name with surrounding blanks
-     ['  First    Last  ', 'Last, First'],       # Decorating blanks everywhere
-     ['Robert C. Martin',  'Martin, Robert C.'], # With middle name
+     ['',                  ''           ,       'Empty is empty'],
+     ['Name',              'Name'       ,       'Simple name'],
+     ['First Last',        'Last, First',       'Reverse First Last'],
+     ['First van Last',    'Last, First van',   'Rearrange last part of name'],
+     ['  Name  ',          'Name'       ,       'Single name with surrounding blanks'],
+     ['  First    Last  ', 'Last, First',       'Decorating blanks everywhere'],
+     ['Robert C. Martin',  'Martin, Robert C.', 'With middle name'],
     ]}
 
     it 'passes all plain examples' do
       for pair in pairs do
-        expect( SortableName.new(pair.first).to_s ).to eq(pair.last)
+        expect(
+          [SortableName.new(pair[0]).to_s, pair[2]]
+        ).to eq(pair[1,2])
       end
     end
 
     it 'passes all examples with leading honorifics' do
       for pair in pairs do
-        expect( SortableName.new( " Mr. Mrs. Ms. " + pair.first).to_s).to eq(pair.last)
+        expect(
+          [SortableName.new( " Mr. Mrs. Ms. " + pair[0]).to_s,pair[2]]
+        ).to eq(pair[1,2])
       end
     end
 
     it 'passes all examples with trailing post nominals' do
       for pair in pairs do
-        expect( SortableName.new(join(pair.first,postnominals)).to_s).to eq(join(pair.last,postnominals))
+        expect(
+          [SortableName.new(join(pair[0],postnominals)).to_s,pair[2]]
+        ).to eq([join(pair[1],postnominals),pair[2]])
       end
     end
 
